@@ -42,6 +42,11 @@ int ps3mapi_get_fw_version(void)
 	return_to_user_prog(int);						
 }
 
+int has_ps3mapi(void)
+{
+	return (ps3mapi_get_core_version() >= PS3MAPI_CORE_MINVERSION);
+}
+
 //-----------------------------------------------
 //PROCESSES
 //-----------------------------------------------

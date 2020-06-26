@@ -31,6 +31,7 @@ int ps3mapi_get_core_version(void);
 int ps3mapi_get_core_minversion(void);
 int ps3mapi_get_fw_type(char *fw);
 int ps3mapi_get_fw_version(void);
+int has_ps3mapi(void);
 
 //-----------------------------------------------
 //PROCESSES
@@ -205,5 +206,24 @@ int ring_buzzer_simple(void);
 int ring_buzzer_double(void);
 int ring_buzzer_triple(void);
 int get_temperature_celcius(uint32_t cpu_temp, uint32_t rsx_temp);
+
+//----------------------------------------
+//COBRA/MAMBA
+//----------------------------------------
+
+#define SYSCALL8_OPCODE_GET_VERSION         0x7000ULL
+#define SYSCALL8_OPCODE_GET_MAMBA           0x7FFFULL
+#define SYSCALL8_OPCODE_IS_HEN              0x1337
+#define SYSCALL8_OPCODE_HEN_VERSION         0x1339
+
+#define SYSCALL8_OPCODE_LOAD_VSH_PLUGIN     0x1EE7
+#define SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN   0x364F
+
+int has_cobra_mamba(void);
+int is_cobra(void);
+int is_mamba(void);
+int is_ps3hen(void);
+int cobra_mamba_syscall_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size);
+int cobra_mamba_syscall_unload_prx_module(uint32_t slot);
 
 #endif /* __PS3MAPI_H__ */
