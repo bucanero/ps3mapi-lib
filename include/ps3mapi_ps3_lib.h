@@ -119,6 +119,7 @@ int ps3mapi_get_current_process(process_t process);
 
 #define PS3MAPI_OPCODE_GET_PROC_MEM			0x0031
 #define PS3MAPI_OPCODE_SET_PROC_MEM			0x0032
+#define PS3MAPI_OPCODE_PROC_PAGE_ALLOCATE	0x0033
 
 int set_process_mem(process_id_t pid, uint64_t addr, char * buf, int size, int isDEX, int isCCAPI);
 int get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size, int isDEX, int isCCAPI);
@@ -128,6 +129,7 @@ int ps3mapi_set_process_mem(process_id_t pid, uint64_t addr, char *buf, int size
 int ps3mapi_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size);
 int dex_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size);
 int ccapi_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size);
+int ps3mapi_process_page_allocate(process_id_t pid, uint64_t size, uint64_t page_size, uint64_t flags, uint64_t is_executable, uint64_t *page_address);
 
 //-----------------------------------------------
 //MODULES
@@ -140,6 +142,22 @@ int ccapi_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size);
 #define PS3MAPI_OPCODE_UNLOAD_PROC_MODULE			0x0045
 #define PS3MAPI_OPCODE_UNLOAD_VSH_PLUGIN			0x0046
 #define PS3MAPI_OPCODE_GET_VSH_PLUGIN_INFO			0x0047
+#define PS3MAPI_OPCODE_GET_PROC_MODULE_INFO			0x0048
+
+typedef struct
+{
+	uint64_t size; /* struct size, ignored in kernel version of the function */
+	char name[30];
+	char version[2];
+	uint32_t modattribute;
+	uint32_t start_entry;
+	uint32_t stop_entry;
+	uint32_t all_segments_num;
+	uint32_t filename; /* User: user pointer to receive filename; Kernel: ignored */
+	uint32_t filename_size;
+	uint32_t segments; /* User: user pointer to receive segments; Kernel: ignored */
+	uint32_t segments_num;
+} __attribute__((packed)) sys_prx_module_info_t;
 
 int ps3mapi_get_all_process_modules_prx_id(process_id_t pid, sys_prx_id_t *prx_id_list);
 int ps3mapi_get_process_module_name_by_prx_id(process_id_t pid, sys_prx_id_t prx_id, char *name);
@@ -148,6 +166,28 @@ int ps3mapi_load_process_modules(process_id_t pid, char *path, void *arg, uint32
 int ps3mapi_unload_process_modules(process_id_t pid, sys_prx_id_t prx_id);
 int ps3mapi_unload_vsh_plugin(char *name);
 int ps3mapi_get_vsh_plugin_info(unsigned int slot, char *name, char *filename);
+int ps3mapi_get_process_module_info(process_id_t pid, sys_prx_id_t prx_id, sys_prx_module_info_t *info);
+
+//-----------------------------------------------
+//THREAD
+//-----------------------------------------------
+
+#define SYSCALL8_OPCODE_PROC_CREATE_THREAD			0x6E03 // not eough params for PS3MAPI_OPCODE
+
+typedef struct
+{
+	void *unk_0; // ptr to some funcs
+	uint64_t unk_8;
+	uint32_t unk_10;
+	uint32_t unk_14;
+	void *unk_18;
+	void *unk_20; // same as unk_18? :S
+	uint64_t unk_28[3];
+	void *unk_40; // same as unk_0?
+	// ...
+} *thread_t;
+
+int ps3mapi_create_process_thread(process_id_t pid, thread_t *thread, void *entry, uint64_t arg, int prio, size_t stacksize, char *threadname);
 
 //-----------------------------------------------
 //CLEAN SYSCALL
@@ -215,7 +255,6 @@ int get_temperature_celcius(uint32_t cpu_temp, uint32_t rsx_temp);
 #define SYSCALL8_OPCODE_GET_MAMBA           0x7FFFULL
 #define SYSCALL8_OPCODE_IS_HEN              0x1337
 #define SYSCALL8_OPCODE_HEN_VERSION         0x1339
-
 #define SYSCALL8_OPCODE_LOAD_VSH_PLUGIN     0x1EE7
 #define SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN   0x364F
 

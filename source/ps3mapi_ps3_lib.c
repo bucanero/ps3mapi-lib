@@ -149,6 +149,12 @@ int ccapi_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size)
 	return_to_user_prog(int);
 }
 
+int ps3mapi_process_page_allocate(process_id_t pid, uint64_t size, uint64_t page_size, uint64_t flags, uint64_t is_executable, uint64_t *page_address)
+{
+	lv2syscall8(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_PROC_PAGE_ALLOCATE, (uint64_t)pid, (uint64_t)size, (uint64_t)page_size, (uint64_t)flags, (uint64_t)is_executable, (uint64_t)page_address);
+	return_to_user_prog(int);						
+}
+
 //-----------------------------------------------
 //MODULES
 //-----------------------------------------------
@@ -192,6 +198,22 @@ int ps3mapi_unload_vsh_plugin(char *name)
 int ps3mapi_get_vsh_plugin_info(unsigned int slot, char *name, char *filename)
 {
 	lv2syscall5(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_GET_VSH_PLUGIN_INFO, (uint64_t)slot, (uint64_t)name, (uint64_t)filename);
+	return_to_user_prog(int);						
+}
+
+int ps3mapi_get_process_module_info(process_id_t pid, sys_prx_id_t prx_id, sys_prx_module_info_t *info)
+{
+	lv2syscall5(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_GET_PROC_MODULE_INFO, (uint64_t)pid, (uint64_t)prx_id, (uint64_t)info);
+	return_to_user_prog(int);						
+}
+
+//-----------------------------------------------
+//THREAD
+//-----------------------------------------------
+
+int ps3mapi_create_process_thread(process_id_t pid, thread_t *thread, void *entry, uint64_t arg, int prio, size_t stacksize, char *threadname)
+{
+	lv2syscall8(8, SYSCALL8_OPCODE_PROC_CREATE_THREAD, (uint64_t)pid, (uint64_t)thread, (uint64_t)entry, (uint64_t)arg, (uint64_t)prio, (uint64_t)stacksize, (uint64_t)threadname);
 	return_to_user_prog(int);						
 }
 
