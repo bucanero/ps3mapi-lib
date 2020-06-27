@@ -55,13 +55,13 @@ int is_ps3hen(void)
     return (sys8_get_hen() == 0x1337);
 }
 
-int cobra_mamba_syscall_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size)
+int cobra_mamba_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size)
 {
 	lv2syscall5(8, SYSCALL8_OPCODE_LOAD_VSH_PLUGIN, (uint64_t)slot, (uint64_t)path, (uint64_t)arg, (uint64_t)arg_size);
 	return_to_user_prog(int);
 }
 
-int cobra_mamba_syscall_unload_prx_module(uint32_t slot)
+int cobra_mamba_unload_prx_module(uint32_t slot)
 {
 	lv2syscall2(8, SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN, (uint64_t)slot);
 	return_to_user_prog(int);

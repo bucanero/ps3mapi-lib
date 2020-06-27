@@ -12,8 +12,6 @@
 
 #define KB 1024ULL
 
-int sys_game_get_temperature(uint32_t _dev, uint32_t *temperature);
-
 //-----------------------------------------------
 //CORE
 //-----------------------------------------------
@@ -285,6 +283,40 @@ int ps3mapi_remove_hook(void)
 }
 
 //-----------------------------------------------
+//PEEK & POKE
+//-----------------------------------------------
+
+int ps3mapi_support_sc8_peek_poke(void)
+{
+	lv2syscall2(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_SUPPORT_SC8_PEEK_POKE);
+	return_to_user_prog(int);						
+}
+
+uint64_t ps3mapi_lv1_peek(uint64_t addr)
+{
+	lv2syscall3(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV1_PEEK, (uint64_t)addr);
+	return_to_user_prog(uint64_t);						
+}
+
+uint64_t ps3mapi_lv2_peek(uint64_t addr)
+{
+	lv2syscall3(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV2_PEEK, (uint64_t)addr);
+	return_to_user_prog(uint64_t);						
+}
+
+int ps3mapi_lv1_poke(uint64_t addr, uint64_t value)
+{
+	lv2syscall4(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV1_POKE, (uint64_t)addr, (uint64_t)value);
+	return_to_user_prog(int);						
+}
+
+int ps3mapi_lv2_poke(uint64_t addr, uint64_t value)
+{
+	lv2syscall4(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV2_POKE, (uint64_t)addr, (uint64_t)value);
+	return_to_user_prog(int);						
+}
+
+//-----------------------------------------------
 //EXTRA (NO PS3 MANAGER SYSCALL)
 //-----------------------------------------------
 
@@ -346,12 +378,23 @@ int sys_game_get_temperature(uint32_t _dev, uint32_t *temperature)
 	return_to_user_prog(int);
 }
 
-int get_temperature_celcius(uint32_t cpu_temp, uint32_t rsx_temp)
+int get_temperature_celcius(uint32_t *cpu_temp, uint32_t *rsx_temp)
 {
-	sys_game_get_temperature(0, &cpu_temp);
-	sys_game_get_temperature(1, &rsx_temp);
-	cpu_temp=cpu_temp>>24;
-	rsx_temp=rsx_temp>>24;
+	sys_game_get_temperature(0, cpu_temp);
+	sys_game_get_temperature(1, rsx_temp);
+	*cpu_temp>>=24;
+	*rsx_temp>>=24;
     return 0;
 }
 
+uint64_t lv2_peek(uint64_t addr)
+{ 
+    lv2syscall1(6, (uint64_t) addr >> 0ULL) ;
+    return_to_user_prog(uint64_t);
+}
+
+int lv2_poke(uint64_t addr, uint64_t value)
+{ 
+    lv2syscall2(7, (uint64_t) addr, (uint64_t) value); 
+    return_to_user_prog(int);
+}

@@ -226,6 +226,23 @@ int ps3mapi_set_psid(uint64_t part1, uint64_t part2);
 int ps3mapi_remove_hook(void);
 
 //-----------------------------------------------
+//PEEK & POKE
+//-----------------------------------------------
+
+#define PS3MAPI_OPCODE_SUPPORT_SC8_PEEK_POKE	0x1000
+#define PS3MAPI_OPCODE_SUPPORT_SC8_PEEK_POKE_OK	0x6789
+#define PS3MAPI_OPCODE_LV2_PEEK					0x1006
+#define PS3MAPI_OPCODE_LV2_POKE					0x1007
+#define PS3MAPI_OPCODE_LV1_PEEK					0x1008
+#define PS3MAPI_OPCODE_LV1_POKE					0x1009
+
+int ps3mapi_support_sc8_peek_poke(void);
+int ps3mapi_lv1_poke(uint64_t addr, uint64_t value);
+int ps3mapi_lv2_poke(uint64_t addr, uint64_t value);
+uint64_t ps3mapi_lv1_peek(uint64_t addr);
+uint64_t ps3mapi_lv2_peek(uint64_t addr);
+
+//-----------------------------------------------
 //EXTRA
 //-----------------------------------------------
 
@@ -245,16 +262,18 @@ int ps3_soft_restart(void);
 int ring_buzzer_simple(void);
 int ring_buzzer_double(void);
 int ring_buzzer_triple(void);
-int get_temperature_celcius(uint32_t cpu_temp, uint32_t rsx_temp);
+int get_temperature_celcius(uint32_t *cpu_temp, uint32_t *rsx_temp);
+int lv2_poke(uint64_t addr, uint64_t value);
+uint64_t lv2_peek(uint64_t addr);
 
 //----------------------------------------
 //COBRA/MAMBA
 //----------------------------------------
 
-#define SYSCALL8_OPCODE_GET_VERSION         0x7000ULL
-#define SYSCALL8_OPCODE_GET_MAMBA           0x7FFFULL
+#define SYSCALL8_OPCODE_GET_VERSION         0x7000
+#define SYSCALL8_OPCODE_GET_MAMBA           0x7FFF
 #define SYSCALL8_OPCODE_IS_HEN              0x1337
-#define SYSCALL8_OPCODE_HEN_VERSION         0x1339
+#define SYSCALL8_OPCODE_HEN_REV             0x1339
 #define SYSCALL8_OPCODE_LOAD_VSH_PLUGIN     0x1EE7
 #define SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN   0x364F
 
@@ -262,7 +281,7 @@ int has_cobra_mamba(void);
 int is_cobra(void);
 int is_mamba(void);
 int is_ps3hen(void);
-int cobra_mamba_syscall_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size);
-int cobra_mamba_syscall_unload_prx_module(uint32_t slot);
+int cobra_mamba_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size);
+int cobra_mamba_unload_prx_module(uint32_t slot);
 
 #endif /* __PS3MAPI_H__ */
