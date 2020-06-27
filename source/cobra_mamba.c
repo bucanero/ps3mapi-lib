@@ -73,6 +73,18 @@ int cobra_mamba_unload_prx_module(uint32_t slot)
 	return_to_user_prog(int);
 }
 
+int cobra_mamba_stealth_test(void)
+{
+    lv2syscall1(8, SYSCALL8_OPCODE_STEALTH_TEST);
+    return_to_user_prog(int);
+}
+
+int cobra_mamba_stealth_activate(void)
+{
+    lv2syscall1(8, SYSCALL8_OPCODE_STEALTH_ACTIVATE);
+    return_to_user_prog(int);
+}
+
 uint64_t lv2_peek(uint64_t addr)
 { 
     lv2syscall1(6, (uint64_t) addr >> 0ULL) ;

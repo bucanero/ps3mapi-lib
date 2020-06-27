@@ -284,6 +284,9 @@ int get_temperature_celcius(uint32_t *cpu_temp, uint32_t *rsx_temp);
 #define SYSCALL8_OPCODE_HEN_REV             0x1339
 #define SYSCALL8_OPCODE_LOAD_VSH_PLUGIN     0x1EE7
 #define SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN   0x364F
+#define SYSCALL8_OPCODE_STEALTH_TEST        0x3993
+#define SYSCALL8_OPCODE_STEALTH_ACTIVATE    0x3995
+#define SYSCALL8_STEALTH_OK                 0x5555
 
 int sys8_get_version(uint32_t *version);
 int sys8_get_hen_version(void);
@@ -293,6 +296,8 @@ int is_mamba(void);
 int is_ps3hen(void);
 int cobra_mamba_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size);
 int cobra_mamba_unload_prx_module(uint32_t slot);
+int cobra_mamba_stealth_test(void);
+int cobra_mamba_stealth_activate(void);
 int lv2_poke(uint64_t addr, uint64_t value);
 int lv2_poke32(uint64_t addr, uint32_t value);
 uint64_t lv2_peek(uint64_t addr);
