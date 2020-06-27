@@ -386,15 +386,3 @@ int get_temperature_celcius(uint32_t *cpu_temp, uint32_t *rsx_temp)
 	*rsx_temp>>=24;
     return 0;
 }
-
-uint64_t lv2_peek(uint64_t addr)
-{ 
-    lv2syscall1(6, (uint64_t) addr >> 0ULL) ;
-    return_to_user_prog(uint64_t);
-}
-
-int lv2_poke(uint64_t addr, uint64_t value)
-{ 
-    lv2syscall2(7, (uint64_t) addr, (uint64_t) value); 
-    return_to_user_prog(int);
-}

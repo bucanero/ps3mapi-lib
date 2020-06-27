@@ -66,3 +66,22 @@ int cobra_mamba_unload_prx_module(uint32_t slot)
 	lv2syscall2(8, SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN, (uint64_t)slot);
 	return_to_user_prog(int);
 }
+
+uint64_t lv2_peek(uint64_t addr)
+{ 
+    lv2syscall1(6, (uint64_t) addr >> 0ULL) ;
+    return_to_user_prog(uint64_t);
+}
+
+int lv2_poke(uint64_t addr, uint64_t value)
+{ 
+    lv2syscall2(7, (uint64_t) addr, (uint64_t) value); 
+    return_to_user_prog(int);
+}
+
+int lv2_poke32(uint64_t addr, uint32_t val)
+{
+    if(addr==0) return (-1);
+    uint32_t next = lv2_peek(addr) & 0xffffffff;
+    return lv2_poke(addr, (((uint64_t) val) << 32) | next);
+}

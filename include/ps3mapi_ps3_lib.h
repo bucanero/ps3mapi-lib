@@ -263,8 +263,6 @@ int ring_buzzer_simple(void);
 int ring_buzzer_double(void);
 int ring_buzzer_triple(void);
 int get_temperature_celcius(uint32_t *cpu_temp, uint32_t *rsx_temp);
-int lv2_poke(uint64_t addr, uint64_t value);
-uint64_t lv2_peek(uint64_t addr);
 
 //----------------------------------------
 //COBRA/MAMBA
@@ -283,5 +281,8 @@ int is_mamba(void);
 int is_ps3hen(void);
 int cobra_mamba_load_prx_module(uint32_t slot, char * path, void * arg, uint32_t arg_size);
 int cobra_mamba_unload_prx_module(uint32_t slot);
+int lv2_poke(uint64_t addr, uint64_t value);
+int lv2_poke32(uint64_t addr, uint32_t value);
+uint64_t lv2_peek(uint64_t addr);
 
 #endif /* __PS3MAPI_H__ */
