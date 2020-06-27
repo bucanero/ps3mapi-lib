@@ -1,7 +1,8 @@
 /*PS3 MANAGER API
  * Copyright (c) 2014 _NzV_.
+ * Updated in 2020 by Bucanero (www.bucanero.com.ar)
  *
- * This code is write by _NzV_ <donm7v@gmail.com>.
+ * This code is written by _NzV_ <donm7v@gmail.com>.
  * It may be used for any purpose as long as this notice remains intact on all
  * source code distributions.
  */
@@ -172,7 +173,7 @@ int ps3mapi_get_process_module_info(process_id_t pid, sys_prx_id_t prx_id, sys_p
 //THREAD
 //-----------------------------------------------
 
-#define SYSCALL8_OPCODE_PROC_CREATE_THREAD			0x6E03 // not eough params for PS3MAPI_OPCODE
+#define SYSCALL8_OPCODE_PROC_CREATE_THREAD			0x6E03 // not enough params for PS3MAPI_OPCODE
 
 typedef struct
 {

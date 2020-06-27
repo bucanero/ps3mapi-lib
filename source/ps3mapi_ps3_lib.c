@@ -1,7 +1,8 @@
 /*PS3 MANAGER API
  * Copyright (c) 2014 _NzV_.
+ * Updated in 2020 by Bucanero (www.bucanero.com.ar)
  *
- * This code is write by _NzV_ <donm7v@gmail.com>.
+ * This code is written by _NzV_ <donm7v@gmail.com>.
  * It may be used for any purpose as long as this notice remains intact on all
  * source code distributions.
  */
@@ -242,7 +243,6 @@ int ps3mapi_pcheck_syscall8()
 	lv2syscall2(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_PCHECK_SYSCALL8);
 	return_to_user_prog(int);						
 }
-
 
 //-----------------------------------------------
 //PSID/IDPS

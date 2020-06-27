@@ -1,7 +1,6 @@
-/*PS3 MANAGER API
- * Copyright (c) 2014 _NzV_.
+/* COBRA/MAMBA PSL1GHT
+ * Copyright (c) 2020 Bucanero (www.bucanero.com.ar)
  *
- * This code is write by _NzV_ <donm7v@gmail.com>.
  * It may be used for any purpose as long as this notice remains intact on all
  * source code distributions.
  */
@@ -87,7 +86,7 @@ int cobra_mamba_stealth_activate(void)
 
 uint64_t lv2_peek(uint64_t addr)
 { 
-    lv2syscall1(6, (uint64_t) addr >> 0ULL) ;
+    lv2syscall1(6, (uint64_t) addr >> 0ULL);
     return_to_user_prog(uint64_t);
 }
 
