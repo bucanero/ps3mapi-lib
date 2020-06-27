@@ -13,7 +13,7 @@
 //COBRA/MAMBA
 //----------------------------------------
 
-int sys8_get_version(u32 *version)
+int sys8_get_version(uint32_t *version)
 {
     lv2syscall2(8, SYSCALL8_OPCODE_GET_VERSION, (uint64_t)version);
     return_to_user_prog(int);
@@ -28,6 +28,12 @@ int sys8_get_mamba(void)
 int sys8_get_hen(void)
 {
     lv2syscall1(8, SYSCALL8_OPCODE_IS_HEN);
+    return_to_user_prog(int);
+}
+
+int sys8_get_hen_version(void)
+{
+    lv2syscall1(8, SYSCALL8_OPCODE_HEN_REV);
     return_to_user_prog(int);
 }
 

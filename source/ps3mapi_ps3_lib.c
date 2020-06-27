@@ -289,31 +289,47 @@ int ps3mapi_remove_hook(void)
 int ps3mapi_support_sc8_peek_poke(void)
 {
 	lv2syscall2(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_SUPPORT_SC8_PEEK_POKE);
-	return_to_user_prog(int);						
+	return_to_user_prog(int);
 }
 
 uint64_t ps3mapi_lv1_peek(uint64_t addr)
 {
 	lv2syscall3(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV1_PEEK, (uint64_t)addr);
-	return_to_user_prog(uint64_t);						
+	return_to_user_prog(uint64_t);
 }
 
 uint64_t ps3mapi_lv2_peek(uint64_t addr)
 {
 	lv2syscall3(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV2_PEEK, (uint64_t)addr);
-	return_to_user_prog(uint64_t);						
+	return_to_user_prog(uint64_t);
 }
 
 int ps3mapi_lv1_poke(uint64_t addr, uint64_t value)
 {
 	lv2syscall4(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV1_POKE, (uint64_t)addr, (uint64_t)value);
-	return_to_user_prog(int);						
+	return_to_user_prog(int);
 }
 
 int ps3mapi_lv2_poke(uint64_t addr, uint64_t value)
 {
 	lv2syscall4(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_LV2_POKE, (uint64_t)addr, (uint64_t)value);
-	return_to_user_prog(int);						
+	return_to_user_prog(int);
+}
+
+//-----------------------------------------------
+//SECURITY
+//-----------------------------------------------
+
+int ps3mapi_set_access_key(uint64_t key)
+{
+	lv2syscall3(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_SET_ACCESS_KEY, (uint64_t)key);
+	return_to_user_prog(int);
+}
+
+int ps3mapi_request_access(uint64_t key)
+{
+	lv2syscall3(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_REQUEST_ACCESS, (uint64_t)key);
+	return_to_user_prog(int);
 }
 
 //-----------------------------------------------

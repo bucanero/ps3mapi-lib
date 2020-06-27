@@ -243,6 +243,16 @@ uint64_t ps3mapi_lv1_peek(uint64_t addr);
 uint64_t ps3mapi_lv2_peek(uint64_t addr);
 
 //-----------------------------------------------
+//SECURITY
+//-----------------------------------------------
+
+#define PS3MAPI_OPCODE_SET_ACCESS_KEY			0x2000
+#define PS3MAPI_OPCODE_REQUEST_ACCESS			0x2001
+
+int ps3mapi_set_access_key(uint64_t key);
+int ps3mapi_request_access(uint64_t key);
+
+//-----------------------------------------------
 //EXTRA
 //-----------------------------------------------
 
@@ -275,6 +285,8 @@ int get_temperature_celcius(uint32_t *cpu_temp, uint32_t *rsx_temp);
 #define SYSCALL8_OPCODE_LOAD_VSH_PLUGIN     0x1EE7
 #define SYSCALL8_OPCODE_UNLOAD_VSH_PLUGIN   0x364F
 
+int sys8_get_version(uint32_t *version);
+int sys8_get_hen_version(void);
 int has_cobra_mamba(void);
 int is_cobra(void);
 int is_mamba(void);
