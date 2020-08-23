@@ -9,6 +9,7 @@
 
 #include <ppu-lv2.h>
 #include <sys/file.h>
+#include <string.h>
 #include "ps3mapi_ps3_lib.h"
 
 #define KB 1024ULL
@@ -204,6 +205,56 @@ int ps3mapi_get_process_module_info(process_id_t pid, sys_prx_id_t prx_id, sys_p
 {
 	lv2syscall5(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_GET_PROC_MODULE_INFO, (uint64_t)pid, (uint64_t)prx_id, (uint64_t)info);
 	return_to_user_prog(int);						
+}
+
+int ps3mapi_get_vsh_plugin_slot_by_name(const char *name)
+{
+    char tmp_name[30];
+    char tmp_filename[256];
+    unsigned int slot;
+
+    for (slot = 1; slot < 7; slot++)
+    {
+        ps3mapi_get_vsh_plugin_info(slot, tmp_name, tmp_filename);
+        if(strcmp(tmp_name, name) == 0)
+            return slot;
+    }
+
+    return 0;
+}
+
+int ps3mapi_get_vsh_plugin_slot_by_filename(const char *filename)
+{
+    char tmp_name[30];
+    char tmp_filename[256];
+    unsigned int slot;
+
+    for (slot = 1; slot < 7; slot++)
+    {
+        ps3mapi_get_vsh_plugin_info(slot, tmp_name, tmp_filename);
+        if(strcmp(tmp_filename, filename) == 0)
+            return slot;
+    }
+
+    return 0;
+}
+
+int ps3mapi_get_vsh_plugin_free_slot(void)
+{
+    char tmp_name[30];
+    char tmp_filename[256];
+    unsigned int slot;
+
+    for (slot = 1; slot < 7; slot++)
+    {
+        memset(tmp_name, 0, sizeof(tmp_name));
+        memset(tmp_filename, 0, sizeof(tmp_filename));
+        ps3mapi_get_vsh_plugin_info(slot, tmp_name, tmp_filename);
+        if(strlen(tmp_filename) == 0 && strlen(tmp_name) == 0)
+            return slot;
+    }
+
+    return 0;
 }
 
 //-----------------------------------------------
