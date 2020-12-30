@@ -215,6 +215,8 @@ int ps3mapi_get_vsh_plugin_slot_by_name(const char *name)
 
     for (slot = 1; slot < 7; slot++)
     {
+        memset(tmp_name, 0, sizeof(tmp_name));
+        memset(tmp_filename, 0, sizeof(tmp_filename));
         ps3mapi_get_vsh_plugin_info(slot, tmp_name, tmp_filename);
         if(strcmp(tmp_name, name) == 0)
             return slot;
@@ -231,6 +233,8 @@ int ps3mapi_get_vsh_plugin_slot_by_filename(const char *filename)
 
     for (slot = 1; slot < 7; slot++)
     {
+        memset(tmp_name, 0, sizeof(tmp_name));
+        memset(tmp_filename, 0, sizeof(tmp_filename));
         ps3mapi_get_vsh_plugin_info(slot, tmp_name, tmp_filename);
         if(strcmp(tmp_filename, filename) == 0)
             return slot;
