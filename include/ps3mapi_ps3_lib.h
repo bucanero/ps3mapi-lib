@@ -133,6 +133,49 @@ int ccapi_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size);
 int ps3mapi_process_page_allocate(process_id_t pid, uint64_t size, uint64_t page_size, uint64_t flags, uint64_t is_executable, uint64_t *page_address);
 
 //-----------------------------------------------
+//DYNAREC
+//-----------------------------------------------
+
+#define NOP __asm__("nop")  // a nop is 4 bytes
+
+#define DYN8B(a)	a;a
+#define DYN16B(a)	a;a;a;a
+#define DYN24B(a)	a;a;a;a;a;a
+#define DYN32B(a)	a;a;a;a;a;a;a;a
+#define DYN40B(a)	a;a;a;a;a;a;a;a;a;a
+#define DYN48B(a)	a;a;a;a;a;a;a;a;a;a;a;a
+#define DYN56B(a)	a;a;a;a;a;a;a;a;a;a;a;a;a;a
+#define DYN64B(a)	a;a;a;a;a;a;a;a;a;a;a;a;a;a;a;a
+#define DYN128B(a) 	DYN32B(DYN16B(a)) // 32 nop
+#define DYN256B(a) 	DYN64B(DYN16B(a)) // 64 nop
+#define DYN512B(a) 	DYN64B(DYN32B(a)) // 128 nop
+#define DYN1K(a) 	DYN128B(DYN32B(a)) // 256 nop
+#define DYN2K(a) 	DYN256B(DYN32B(a)) // 512 nop
+#define DYN4K(a) 	DYN512B(DYN32B(a)) // 1024 nop
+#define DYN8K(a) 	DYN1K(DYN32B(a)) // 2048 nop
+#define DYN16K(a) 	DYN2K(DYN32B(a)) // 4096 nop
+#define DYN32K(a) 	DYN4K(DYN32B(a)) // 8192 nop
+#define DYN64K(a) 	DYN8K(DYN32B(a)) // 16384 nop
+#define DYN128K(a) 	DYN16K(DYN32B(a)) // 32768 nop
+#define DYN256K(a) 	DYN32K(DYN32B(a)) // 65536 nop
+#define DYN512K(a) 	DYN64K(DYN32B(a)) // 131072 nop
+#define DYN1M(a) 	DYN128K(DYN32B(a)) // 262144 nop
+#define DYN2M(a) 	DYN256K(DYN32B(a)) // 524288 nop
+#define DYN4M(a) 	DYN512K(DYN32B(a)) // 1048576 nop
+
+#define DYNAREC_ADDRESS_SHIFT 				12
+
+#ifdef DYN_SIZE
+void DYN_SIZE_FAKEFUN(void) 
+{
+	DYN_SIZE(NOP);
+}
+#endif
+
+int ps3mapi_dynarec_init(void *fakefun, void **start_dyn_buff, int *len_dyn_buff);
+int ps3mapi_dynarec_write_bytecode(void *start_dyn_buff, int len_dyn_buff, int offset, char *buff, int len);
+
+//-----------------------------------------------
 //MODULES
 //-----------------------------------------------
 

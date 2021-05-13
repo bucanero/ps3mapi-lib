@@ -9,6 +9,7 @@
 
 #include <ppu-lv2.h>
 #include <sys/file.h>
+#include <sys/process.h>
 #include <string.h>
 #include "ps3mapi_ps3_lib.h"
 
@@ -153,6 +154,55 @@ int ps3mapi_process_page_allocate(process_id_t pid, uint64_t size, uint64_t page
 {
 	lv2syscall8(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_PROC_PAGE_ALLOCATE, (uint64_t)pid, (uint64_t)size, (uint64_t)page_size, (uint64_t)flags, (uint64_t)is_executable, (uint64_t)page_address);
 	return_to_user_prog(int);						
+}
+
+//-----------------------------------------------
+//DYNAREC
+//-----------------------------------------------
+
+int ps3mapi_dynarec_write_bytecode(void *start_dyn_buff, int len_dyn_buff, int offset, char *buff, int len)
+{
+	if (offset + len > len_dyn_buff || offset < 0 || !buff || offset%4)
+		return(-1);
+
+	char *tmp = (char*)malloc(len+DYNAREC_ADDRESS_SHIFT);
+	if(!tmp)
+		return(-1);
+
+	*(uint64_t *)tmp = (uint64_t)start_dyn_buff + offset + DYNAREC_ADDRESS_SHIFT;
+	*(uint32_t *)(tmp+sizeof(uint64_t)) = 0;
+
+	memcpy((void*)(tmp+DYNAREC_ADDRESS_SHIFT), buff, len);
+
+	int result = ps3mapi_set_process_mem(sysProcessGetPid(), (uint64_t)start_dyn_buff + offset, tmp, len);
+	free(tmp);
+
+	return (result);
+}
+
+void _FAKE_DYN4K_FUN(void) 
+{
+	DYN4K(NOP);
+}
+
+int ps3mapi_dynarec_init(void *fakefun, void **start_dyn_buff, int *len_dyn_buff)
+{
+	*start_dyn_buff = (void*)*(uint64_t*)(fakefun ? fakefun : _FAKE_DYN4K_FUN);
+	
+	uint32_t *toffset = (uint32_t*)(*start_dyn_buff);
+	*len_dyn_buff = 0;
+
+	while (*toffset != 0x4e800020)  //Search for blr
+	{
+		toffset++;
+		*len_dyn_buff += 4;
+		
+		if (*len_dyn_buff == 0x7FFFFFFC)
+			return(-1);
+	}
+
+	*len_dyn_buff += 4;  //Dynarec buffer length;
+	return 0;
 }
 
 //-----------------------------------------------
