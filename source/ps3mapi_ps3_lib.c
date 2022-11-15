@@ -150,9 +150,15 @@ int ccapi_get_process_mem(process_id_t pid, uint64_t addr, char *buf, int size)
 	return_to_user_prog(int);
 }
 
-int ps3mapi_process_page_allocate(process_id_t pid, uint64_t size, uint64_t page_size, uint64_t flags, uint64_t is_executable, uint64_t *page_address)
+int ps3mapi_process_page_allocate(process_id_t pid, uint64_t size, uint64_t page_size, uint64_t flags, uint64_t is_executable, uint64_t *page_table)
 {
-	lv2syscall8(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_PROC_PAGE_ALLOCATE, (uint64_t)pid, (uint64_t)size, (uint64_t)page_size, (uint64_t)flags, (uint64_t)is_executable, (uint64_t)page_address);
+	lv2syscall8(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_PROC_PAGE_ALLOCATE, (uint64_t)pid, (uint64_t)size, (uint64_t)page_size, (uint64_t)flags, (uint64_t)is_executable, (uint64_t)page_table);
+	return_to_user_prog(int);						
+}
+
+int ps3mapi_process_page_free(process_id_t pid, uint64_t flags, uint64_t *page_table)
+{
+	lv2syscall5(8, SYSCALL8_OPCODE_PS3MAPI, PS3MAPI_OPCODE_PROC_PAGE_FREE, (uint64_t)pid, (uint64_t)flags, (uint64_t)page_table);
 	return_to_user_prog(int);						
 }
 
